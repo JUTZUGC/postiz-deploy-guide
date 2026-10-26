@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "postiz-guide": {
+      "command": "node",
+      "args": [
+        "mcp-server.mjs"
+      ]
+    }
+  }
+}

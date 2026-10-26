@@ -1,0 +1,105 @@
+{
+  "owner": "JUTZUGC",
+  "code": "JUTZUGC",
+  "project": {
+    "key": "postiz",
+    "nameCn": "Postiz",
+    "repoName": "postiz-deploy-guide",
+    "oneLiner": "开源自托管的社媒排期与内容管理平台",
+    "officialRepo": "https://github.com/gitroomhq/postiz-app",
+    "officialDocs": "https://docs.postiz.com",
+    "stars": "37.9k",
+    "license": "AGPL-3.0",
+    "highlights": [
+      "发帖排期：多平台草稿、日历视图、定时发布",
+      "数据分析：各平台表现回看",
+      "开源版不限渠道与发帖量，数据自持",
+      "部署：官方 `docker-compose.yaml`，含 Postiz + PostgreSQL + Redis + Temporal",
+      "主机：任意 VPS，或 Coolify / Railway 一类平台"
+    ],
+    "mcpSupport": "Postiz 提供公开 API 与 Node SDK，但项目本身不是 MCP server。本仓库的 MCP 只提供安装步骤、端口与常见坑。",
+    "webuiUrl": "http://127.0.0.1:4007",
+    "adapterPorts": "",
+    "collectedAt": "2026-10-26",
+    "verification": [
+      [
+        "官方 docker-compose.yaml 已核对（镜像、4007 端口、JWT_SECRET 占位）",
+        "已核对 2026-10-26"
+      ],
+      [
+        "本机无 Docker，完整启动未实测",
+        "已核对 2026-10-26"
+      ],
+      [
+        "MCP 服务握手与工具列表（initialize / tools/list）",
+        "已验证 2026-10-26"
+      ],
+      [
+        "非目标宿主调用被拦截（HOST_NOT_ALLOWED）",
+        "已验证 2026-10-26"
+      ]
+    ],
+    "deploy": {
+      "type": "docker",
+      "steps": [
+        "git clone https://github.com/gitroomhq/postiz-app",
+        "cd postiz-app",
+        "if command -v openssl >/dev/null 2>&1; then sed -i \"s|JWT_SECRET: '.*'|JWT_SECRET: '$(openssl rand -hex 16)'|\" docker-compose.yaml; else echo \"请手动修改 docker-compose.yaml 里的 JWT_SECRET\"; fi",
+        "docker compose up -d"
+      ],
+      "stepsPs": [
+        "git clone https://github.com/gitroomhq/postiz-app",
+        "Set-Location postiz-app",
+        "$secret = -join ((1..32) | ForEach-Object { '{0:x}' -f (Get-Random -Max 16) }) ; (Get-Content docker-compose.yaml -Raw) -replace \"JWT_SECRET: '.*'\", \"JWT_SECRET: '$secret'\" | Set-Content docker-compose.yaml -NoNewline",
+        "docker compose up -d"
+      ],
+      "source": "https://github.com/gitroomhq/postiz-app/blob/main/docker-compose.yaml"
+    },
+    "pitfalls": [
+      "JWT_SECRET 是占位符：不改会不安全，本指南已自动替换成随机值",
+      "首次启动慢：镜像多且大，用 `docker compose logs -f postiz` 看进度，别急着重建",
+      "打不开 4007：先确认容器都起来了，再检查防火墙 / 安全组",
+      "连接平台失败：多数平台要自建开发者应用，回调地址要填 `http://<你的地址>:4007/api/...`",
+      "内存不足：Temporal + Redis + Postgres 比较吃内存，建议 4 GB 起",
+      "注册开放会被陌生人注册：装完把 `DISABLE_REGISTRATION` 设为 `true`",
+      "改了 compose 里的环境变量要 `docker compose up -d` 才生效",
+      "国内拉镜像慢：先给 Docker 配镜像加速"
+    ]
+  },
+  "gate": {
+    "allow": [
+      "dumate"
+    ],
+    "label": "百度搭子",
+    "url": "https://www.dumate.cn/",
+    "guideUrl": "https://github.com/JUTZUGC/postiz-deploy-guide",
+    "howToFix": [
+      "1. 打开 https://www.dumate.cn/ ，下载并安装「百度搭子」电脑端（Windows / macOS）",
+      "2. 用账号登录",
+      "3. 在对话窗口发送：你好，帮我从 github 部署 JUTZUGC/postiz-deploy-guide 到我的电脑上",
+      "4. 部署完成后，在同一对话窗口里继续使用"
+    ],
+    "hint": "请改用「百度搭子」部署后再使用；本工具没有网页版入口。",
+    "onError": "allow"
+  },
+  "keywords": [
+    "Postiz 部署",
+    "Postiz 安装教程",
+    "开源 社媒 排期",
+    "Buffer 替代",
+    "Hootsuite 替代",
+    "社交媒体 定时发布",
+    "自托管 发帖工具",
+    "Postiz Docker",
+    "Postiz 中文",
+    "postiz deploy guide"
+  ],
+  "topics": [
+    "social-media",
+    "scheduler",
+    "self-hosted",
+    "docker",
+    "nextjs",
+    "postiz"
+  ]
+}
